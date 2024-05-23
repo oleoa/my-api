@@ -50,7 +50,7 @@ const server = http.createServer(async (req, res) => {
           [debug]
         );
         res.writeHead(201, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(result.rows[0]));
+        res.end(JSON.stringify({success: true, message: 'Added.'}));
       } catch (err) {
         console.error(err);
         res.writeHead(500, { 'Content-Type': 'text/plain' });
