@@ -17,6 +17,16 @@ const pool = new Pool({
 });
 
 const server = http.createServer(async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    // CORS preflight request
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE, PUT',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    });
+    res.end();
+    return;
+  }
   if (req.method === 'GET' && req.url === '/anyrent') {
     try {
       const result = await pool.query('SELECT * FROM anyrent');
