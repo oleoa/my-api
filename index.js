@@ -1,68 +1,23 @@
-const http = require('http');
-const { Pool } = require('pg');
-const dotenv = require('dotenv');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
-dotenv.config();
+// Configurar o body-parser para processar requisições JSON
+app.use(bodyParser.json());
 
-let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PORT } = process.env;
-const pool = new Pool({
-  host: PGHOST,
-  database: PGDATABASE,
-  username: PGUSER,
-  password: PGPASSWORD,
-  port: 5432,
-  ssl: {
-    require: true,
-  },
+// Rota para receber webhooks de e-mail
+app.post('/email', (req, res) => {
+  const emailData = req.body;
+
+  // Faça alguma ação com o e-mail recebido
+  console.log('Novo e-mail recebido:', emailData);
+
+  // Enviar uma resposta ao serviço de e-mail
+  res.status(200).send('E-mail recebido com sucesso!');
 });
 
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'OPTIONS') {
-    // CORS preflight request
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE, PUT',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    });
-    res.end();
-    return;
-  }
-  if (req.method === 'GET' && req.url === '/anyrent') {
-    try {
-      const result = await pool.query('SELECT * FROM anyrent');
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(result.rows));
-    } catch (err) {
-      console.error(err);
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('Server Error');
-    }
-  } else if (req.method === 'POST' && req.url === '/anyrent') {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', async () => {
-      const { debug } = JSON.parse(body);
-      try {
-        const result = await pool.query(
-          'INSERT INTO anyrent (debug) VALUES ($1) RETURNING *',
-          [debug]
-        );
-        res.writeHead(201, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({success: true, message: 'Added.'}));
-      } catch (err) {
-        console.error(err);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Server Error');
-      }
-    });
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found');
-  }
-});
-
-server.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
+// Iniciar o servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
