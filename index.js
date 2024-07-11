@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 // Rota para receber webhooks de e-mail
 app.post('/email', (req, res) => {
+  
   const emailData = req.body;
 
   // Faça alguma ação com o e-mail recebido
