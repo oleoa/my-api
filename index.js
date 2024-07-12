@@ -24,7 +24,7 @@ app.post('/email', (req, res) => {
 
       // Se existir, cria tres novas linhas na base de dados notion (lavagem, entrega e recolha)
       let reservation = response.data;
-      console.log(reservation.optionals.extras[0].quantity);
+      console.log(reservation);
 
       let localTranslator = {
         "aeroporto": "Aeroporto",
@@ -51,6 +51,47 @@ app.post('/email', (req, res) => {
       };
 
       (async () => {
+
+        let lavagem = await notion.pages.create({
+          "parent": {
+            "type": "database_id",
+            "database_id": "7107291622514df2ac798e53e3291541"
+          },
+          "properties": {
+              "Reserva": {
+                "type": "title",
+                "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
+              },
+              "Operação": {
+                "type": "select",
+                "select": { "name": "Lavagem" }
+              },
+              "Grupo": {
+                "type": "select",
+                "select": { "name": vehicleTranslator[reservation.group] }
+              },
+              "Data": {
+                "type": "date",
+                "date": { "start": reservation.pickup_date.split(" ")[0] }
+              },
+              "Local": {
+                "type": "select",
+                "select": { "name": "Casa" }
+              },
+              "Anyrent": {
+                "type": "url",
+                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+              },
+              "Cadeiras": {
+                "type": "number",
+                "number": reservation.optionals.extras[0].quantity
+              },
+              "Assentos": {
+                "type": "number",
+                "number": reservation.optionals.extras[1].quantity
+              },
+          }
+        });
 
         let entrega = await notion.pages.create({
           "parent": {
