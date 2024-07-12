@@ -57,7 +57,7 @@ app.post('/email', (req, res) => {
           if(extra.code == "cadeira")
             cadeiras = extra.quantity;
           if(extra.code == "assento")
-            assento = extra.quantity;
+            assentos = extra.quantity;
         });
 
       (async () => {
