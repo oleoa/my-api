@@ -50,6 +50,16 @@ app.post('/email', (req, res) => {
         "c2": "Sandero"
       };
 
+      let cadeiras = 0;
+      let assentos = 0;
+      if(reservation.optionals.extras)
+        reservation.optionals.extras.forEach(extra => {
+          if(extra.code == "cadeira")
+            cadeiras = extra.quantity;
+          if(extra.code == "assento")
+            assento = extra.quantity;
+        });
+
       (async () => {
 
         let lavagem = await notion.pages.create({
@@ -84,11 +94,11 @@ app.post('/email', (req, res) => {
               },
               "Cadeiras": {
                 "type": "number",
-                "number": reservation.optionals.extras[0].quantity
+                "number": cadeiras
               },
               "Assentos": {
                 "type": "number",
-                "number": reservation.optionals.extras[1].quantity
+                "number": assentos
               },
           }
         });
@@ -133,11 +143,11 @@ app.post('/email', (req, res) => {
               },
               "Cadeiras": {
                 "type": "number",
-                "number": reservation.optionals.extras[0].quantity
+                "number": cadeiras
               },
               "Assentos": {
                 "type": "number",
-                "number": reservation.optionals.extras[1].quantity
+                "number": assentos
               },
           }
         });
@@ -182,11 +192,11 @@ app.post('/email', (req, res) => {
               },
               "Cadeiras": {
                 "type": "number",
-                "number": reservation.optionals.extras[0].quantity
+                "number": cadeiras
               },
               "Assentos": {
                 "type": "number",
-                "number": reservation.optionals.extras[1].quantity
+                "number": assentos
               },
           }
         });
@@ -199,6 +209,7 @@ app.post('/email', (req, res) => {
     });
 
   res.status(200).send('Reserva recebida com sucesso! '+idReserva);
+
 });
 
 const PORT = process.env.PORT;
