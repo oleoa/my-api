@@ -24,7 +24,7 @@ app.post('/email', (req, res) => {
 
       // Se existir, cria tres novas linhas na base de dados notion (lavagem, entrega e recolha)
       let reservation = response.data;
-      console.log(reservation);
+      console.log(reservation.optionals.extras[0].quantity);
 
       let localTranslator = {
         "aeroporto": "Aeroporto",
@@ -41,8 +41,18 @@ app.post('/email', (req, res) => {
         "canico": "Caniço"
       };
 
+      let vehicleTranslator = {
+        "a1": "Panda",
+        "a2": "Up",
+        "a3": "500",
+        "b1": "Spacestar",
+        "c1": "Clio",
+        "c2": "Sandero"
+      };
+
       (async () => {
-        const response = await notion.pages.create({
+
+        let entrega = await notion.pages.create({
           "parent": {
             "type": "database_id",
             "database_id": "7107291622514df2ac798e53e3291541"
@@ -56,6 +66,10 @@ app.post('/email', (req, res) => {
                 "type": "select",
                 "select": { "name": "Entrega" }
               },
+              "Grupo": {
+                "type": "select",
+                "select": { "name": vehicleTranslator[reservation.group] }
+              },
               "Data": {
                 "type": "date",
                 "date": { "start": new Date(reservation.pickup_date).toISOString() }
@@ -66,12 +80,78 @@ app.post('/email', (req, res) => {
               },
               "Anyrent": {
                 "type": "url",
-                "url": "https://www.twilio.com/en-us/blog/manipulate-notion-database-using-node-js"
-              }
+                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+              },
+              "Envio": {
+                "type": "url",
+                "url": "https://wa.me/"+reservation.customer.phone+"?text=Ol%C3%A1%2C%20tudo%20bem%3F%0ASou%20o%20Leonardo%2C%20da%20Achieve%20Rent%20a%20Car.%0ATemos%20programada%20a%20entrega%20de%20um%20carro%20para%20si%20hoje%20%2F%20amanh%C3%A3%20%C3%A0s%2010%3A00%20no%20aeroporto.%0APodemos%20confirmar%3F"
+              },
+              "Voo": {
+                "type": "url",
+                "url": "https://www.flightaware.com/live/flight/"+reservation.arrival_flight
+              },
+              "Cadeiras": {
+                "type": "number",
+                "number": reservation.optionals.extras[0].quantity
+              },
+              "Assentos": {
+                "type": "number",
+                "number": reservation.optionals.extras[1].quantity
+              },
           }
-      });
-        console.log(response);
+        });
+
+        let recolha = await notion.pages.create({
+          "parent": {
+            "type": "database_id",
+            "database_id": "7107291622514df2ac798e53e3291541"
+          },
+          "properties": {
+              "Reserva": {
+                "type": "title",
+                "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
+              },
+              "Operação": {
+                "type": "select",
+                "select": { "name": "Recolha" }
+              },
+              "Grupo": {
+                "type": "select",
+                "select": { "name": vehicleTranslator[reservation.group] }
+              },
+              "Data": {
+                "type": "date",
+                "date": { "start": new Date(reservation.dropoff_date).toISOString() }
+              },
+              "Local": {
+                "type": "select",
+                "select": { "name": localTranslator[reservation.dropoff_station] }
+              },
+              "Anyrent": {
+                "type": "url",
+                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+              },
+              "Envio": {
+                "type": "url",
+                "url": "https://wa.me/"+reservation.customer.phone+"?text=Ol%C3%A1%2C%20tudo%20bem%3F%0ASou%20o%20Leonardo%2C%20da%20Achieve%20Rent%20a%20Car.%0ATemos%20programada%20a%20entrega%20de%20um%20carro%20para%20si%20hoje%20%2F%20amanh%C3%A3%20%C3%A0s%2010%3A00%20no%20aeroporto.%0APodemos%20confirmar%3F"
+              },
+              "Voo": {
+                "type": "url",
+                "url": "https://www.flightaware.com/live/flight/"+reservation.departure_flight
+              },
+              "Cadeiras": {
+                "type": "number",
+                "number": reservation.optionals.extras[0].quantity
+              },
+              "Assentos": {
+                "type": "number",
+                "number": reservation.optionals.extras[1].quantity
+              },
+          }
+        });
+
       })();
+      
     })
     .catch(error => {
       console.error('Error making GET request:', error);
