@@ -123,7 +123,7 @@ app.post('/email', (req, res) => {
               },
               "Data": {
                 "type": "date",
-                "date": { "start": new Date(reservation.pickup_date).toISOString() }
+                "date": { "start": new Date(reservation.pickup_date).toISOString(), "time_zone": "Atlantic/Madeira" }
               },
               "Local": {
                 "type": "select",
@@ -172,7 +172,7 @@ app.post('/email', (req, res) => {
               },
               "Data": {
                 "type": "date",
-                "date": { "start": new Date(reservation.dropoff_date).toISOString() }
+                "date": { "start": new Date(reservation.dropoff_date).toISOString(), "time_zone": "Atlantic/Madeira" }
               },
               "Local": {
                 "type": "select",
