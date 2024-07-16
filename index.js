@@ -139,7 +139,7 @@ app.post('/email', (req, res) => {
               },
               "Voo": {
                 "type": "url",
-                "url": "https://www.flightaware.com/live/flight/"+reservation.arrival_flight
+                "url": "https://www.flightradar24.com/data/flights/"+reservation.arrival_flight
               },
               "Cadeiras": {
                 "type": "number",
@@ -188,7 +188,7 @@ app.post('/email', (req, res) => {
               },
               "Voo": {
                 "type": "url",
-                "url": "https://www.flightaware.com/live/flight/"+reservation.departure_flight
+                "url": "https://www.flightradar24.com/data/flights/"+reservation.departure_flight
               },
               "Cadeiras": {
                 "type": "number",
