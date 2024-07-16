@@ -158,7 +158,7 @@ app.post('/email', (req, res) => {
             "database_id": "7107291622514df2ac798e53e3291541"
           },
           "properties": {
-              "Reserva": {
+              "#": {
                 "type": "title",
                 "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
               },
