@@ -135,7 +135,7 @@ app.post('/email', (req, res) => {
               },
               "Whatsapp": {
                 "type": "number",
-                "number": reservation.customer.phone
+                "number": parseInt(reservation.customer.phone)
               },
               "Voo": {
                 "type": "url",
@@ -184,7 +184,7 @@ app.post('/email', (req, res) => {
               },
               "Whatsapp": {
                 "type": "number",
-                "number": reservation.customer.phone
+                "number": parseInt(reservation.customer.phone)
               },
               "Voo": {
                 "type": "url",
