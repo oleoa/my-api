@@ -133,9 +133,9 @@ app.post('/email', (req, res) => {
                 "type": "url",
                 "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
               },
-              "Envio": {
-                "type": "url",
-                "url": "https://wa.me/"+reservation.customer.phone+"?text=Ol%C3%A1%2C%20tudo%20bem%3F%0ASou%20o%20Leonardo%2C%20da%20Achieve%20Rent%20a%20Car.%0ATemos%20programada%20a%20entrega%20de%20um%20carro%20para%20si%20hoje%20%2F%20amanh%C3%A3%20%C3%A0s%2010%3A00%20no%20aeroporto.%0APodemos%20confirmar%3F"
+              "Whatsapp": {
+                "type": "number",
+                "number": reservation.customer.phone
               },
               "Voo": {
                 "type": "url",
@@ -182,9 +182,9 @@ app.post('/email', (req, res) => {
                 "type": "url",
                 "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
               },
-              "Envio": {
-                "type": "url",
-                "url": "https://wa.me/"+reservation.customer.phone+"?text=Ol%C3%A1%2C%20tudo%20bem%3F%0ASou%20o%20Leonardo%2C%20da%20Achieve%20Rent%20a%20Car.%0ATemos%20programada%20a%20entrega%20de%20um%20carro%20para%20si%20hoje%20%2F%20amanh%C3%A3%20%C3%A0s%2010%3A00%20no%20aeroporto.%0APodemos%20confirmar%3F"
+              "Whatsapp": {
+                "type": "number",
+                "number": reservation.customer.phone
               },
               "Voo": {
                 "type": "url",
