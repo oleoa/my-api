@@ -86,7 +86,7 @@ app.post('/email', (req, res) => {
               },
               "Local": {
                 "type": "select",
-                "select": { "name": "Casa" }
+                "select": { "name": "Sede" }
               },
               "Anyrent": {
                 "type": "url",
