@@ -24,7 +24,7 @@ app.post('/email', (req, res) => {
 
       // Se existir, cria tres novas linhas na base de dados notion (lavagem, entrega e recolha)
       let reservation = response.data;
-      console.log(reservation);
+      //console.log(reservation);
 
       let localTranslator = {
         "aeroporto": "Aeroporto",
@@ -62,143 +62,158 @@ app.post('/email', (req, res) => {
 
       (async () => {
 
-        let lavagem = await notion.pages.create({
+        let preparacaoTemplateId = "cc3e4d507acd42a2b274d65c5b9ae0b1";
+        let preparacaoTemplate = await notion.blocks.children.list({
+          block_id: preparacaoTemplateId
+        })
+        let preparacao = await notion.pages.create({
           "parent": {
             "type": "database_id",
             "database_id": "7107291622514df2ac798e53e3291541"
           },
           "properties": {
-              "#": {
-                "type": "title",
-                "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
-              },
-              "Operação": {
-                "type": "select",
-                "select": { "name": "Preparação" }
-              },
-              "Grupo": {
-                "type": "select",
-                "select": { "name": vehicleTranslator[reservation.group] }
-              },
-              "Data": {
-                "type": "date",
-                "date": { "start": reservation.pickup_date.split(" ")[0] }
-              },
-              "Local": {
-                "type": "select",
-                "select": { "name": "Sede" }
-              },
-              "Anyrent": {
-                "type": "url",
-                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
-              },
-              "Cadeiras": {
-                "type": "number",
-                "number": cadeiras
-              },
-              "Assentos": {
-                "type": "number",
-                "number": assentos
-              },
-          }
+            "#": {
+              "type": "title",
+              "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
+            },
+            "Operação": {
+              "type": "select",
+              "select": { "name": "Preparação" }
+            },
+            "Grupo": {
+              "type": "select",
+              "select": { "name": vehicleTranslator[reservation.group] }
+            },
+            "Data": {
+              "type": "date",
+              "date": { "start": reservation.pickup_date.split(" ")[0] }
+            },
+            "Local": {
+              "type": "select",
+              "select": { "name": "Sede" }
+            },
+            "Anyrent": {
+              "type": "url",
+              "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+            },
+            "Cadeiras": {
+              "type": "number",
+              "number": cadeiras
+            },
+            "Assentos": {
+              "type": "number",
+              "number": assentos
+            },
+          },
+          "children" : preparacaoTemplate["results"]
         });
 
+        let entregaTemplateId = "afa0b13f73294fe0895d61d78a4bfac7";
+        let entregaTemplate = await notion.blocks.children.list({
+          block_id: entregaTemplateId
+        })
         let entrega = await notion.pages.create({
           "parent": {
             "type": "database_id",
             "database_id": "7107291622514df2ac798e53e3291541"
           },
           "properties": {
-              "#": {
-                "type": "title",
-                "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
-              },
-              "Operação": {
-                "type": "select",
-                "select": { "name": "Entrega" }
-              },
-              "Grupo": {
-                "type": "select",
-                "select": { "name": vehicleTranslator[reservation.group] }
-              },
-              "Data": {
-                "type": "date",
-                "date": { "start": new Date(reservation.pickup_date).toISOString(), "time_zone": "Atlantic/Madeira" }
-              },
-              "Local": {
-                "type": "select",
-                "select": { "name": localTranslator[reservation.pickup_station] }
-              },
-              "Anyrent": {
-                "type": "url",
-                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
-              },
-              "Whatsapp": {
-                "type": "number",
-                "number": parseInt(reservation.customer.phone)
-              },
-              "Voo": {
-                "type": "url",
-                "url": "https://www.flightradar24.com/data/flights/"+reservation.arrival_flight
-              },
-              "Cadeiras": {
-                "type": "number",
-                "number": cadeiras
-              },
-              "Assentos": {
-                "type": "number",
-                "number": assentos
-              },
-          }
+            "#": {
+              "type": "title",
+              "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
+            },
+            "Operação": {
+              "type": "select",
+              "select": { "name": "Entrega" }
+            },
+            "Grupo": {
+              "type": "select",
+              "select": { "name": vehicleTranslator[reservation.group] }
+            },
+            "Data": {
+              "type": "date",
+              "date": { "start": new Date(reservation.pickup_date).toISOString(), "time_zone": "Atlantic/Madeira" }
+            },
+            "Local": {
+              "type": "select",
+              "select": { "name": localTranslator[reservation.pickup_station] }
+            },
+            "Anyrent": {
+              "type": "url",
+              "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+            },
+            "Whatsapp": {
+              "type": "number",
+              "number": parseInt(reservation.customer.phone)
+            },
+            "Voo": {
+              "type": "url",
+              "url": "https://www.flightradar24.com/data/flights/"+reservation.arrival_flight
+            },
+            "Cadeiras": {
+              "type": "number",
+              "number": cadeiras
+            },
+            "Assentos": {
+              "type": "number",
+              "number": assentos
+            },
+          },
+          "children" : entregaTemplate["results"]
         });
 
+        let recolhaTemplateId = "3b4ce7484f18487e8f12c68e85c6a38e";
+        let recolhaTemplate = await notion.blocks.children.list({
+          block_id: recolhaTemplateId
+        })
         let recolha = await notion.pages.create({
           "parent": {
             "type": "database_id",
             "database_id": "7107291622514df2ac798e53e3291541"
           },
           "properties": {
-              "#": {
-                "type": "title",
-                "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
-              },
-              "Operação": {
-                "type": "select",
-                "select": { "name": "Recolha" }
-              },
-              "Grupo": {
-                "type": "select",
-                "select": { "name": vehicleTranslator[reservation.group] }
-              },
-              "Data": {
-                "type": "date",
-                "date": { "start": new Date(reservation.dropoff_date).toISOString(), "time_zone": "Atlantic/Madeira" }
-              },
-              "Local": {
-                "type": "select",
-                "select": { "name": localTranslator[reservation.dropoff_station] }
-              },
-              "Anyrent": {
-                "type": "url",
-                "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
-              },
-              "Whatsapp": {
-                "type": "number",
-                "number": parseInt(reservation.customer.phone)
-              },
-              "Voo": {
-                "type": "url",
-                "url": "https://www.flightradar24.com/data/flights/"+reservation.departure_flight
-              },
-              "Cadeiras": {
-                "type": "number",
-                "number": cadeiras
-              },
-              "Assentos": {
-                "type": "number",
-                "number": assentos
-              },
-          }
+            "#": {
+              "type": "title",
+              "title": [{ "type": "text", "text": { "content": '#'+reservation.booking_nr } }]
+            },
+            "Operação": {
+              "type": "select",
+              "select": { "name": "Recolha" }
+            },
+            "Grupo": {
+              "type": "select",
+              "select": { "name": vehicleTranslator[reservation.group] }
+            },
+            "Data": {
+              "type": "date",
+              "date": { "start": new Date(reservation.dropoff_date).toISOString(), "time_zone": "Atlantic/Madeira" }
+            },
+            "Local": {
+              "type": "select",
+              "select": { "name": localTranslator[reservation.dropoff_station] }
+            },
+            "Anyrent": {
+              "type": "url",
+              "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
+            },
+            "Whatsapp": {
+              "type": "number",
+              "number": parseInt(reservation.customer.phone)
+            },
+            "Voo": {
+              "type": "url",
+              "url": "https://www.flightradar24.com/data/flights/"+reservation.departure_flight
+            },
+            "Cadeiras": {
+              "type": "number",
+              "number": cadeiras
+            },
+            "Assentos": {
+              "type": "number",
+              "number": assentos
+            },
+          },
+          "children": recolhaTemplate["results"]
         });
 
       })();
