@@ -74,7 +74,7 @@ app.post('/email', (req, res) => {
               },
               "Operação": {
                 "type": "select",
-                "select": { "name": "Lavagem" }
+                "select": { "name": "Preparação" }
               },
               "Grupo": {
                 "type": "select",
