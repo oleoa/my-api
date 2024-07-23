@@ -143,8 +143,8 @@ app.post('/email', (req, res) => {
               "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
             },
             "Whatsapp": {
-              "type": "number",
-              "number": parseInt(reservation.customer.phone)
+              "type": "rich_text",
+              "rich_text": [ { "type": "text", "text": { "content": reservation.customer.phone} } ]
             },
             "Voo": {
               "type": "rich_text",
@@ -197,8 +197,8 @@ app.post('/email', (req, res) => {
               "url": "https://achieverac.s12.anyrent.pt/app/jedeye/anyrent/reservations/update/"+reservation.booking_nr
             },
             "Whatsapp": {
-              "type": "number",
-              "number": parseInt(reservation.customer.phone)
+              "type": "rich_text",
+              "rich_text": [ { "type": "text", "text": { "content": reservation.customer.phone} } ]
             },
             "Voo": {
               "type": "rich_text",
