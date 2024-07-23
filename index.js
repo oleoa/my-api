@@ -147,8 +147,8 @@ app.post('/email', (req, res) => {
               "number": parseInt(reservation.customer.phone)
             },
             "Voo": {
-              "type": "url",
-              "url": "https://www.flightradar24.com/data/flights/"+reservation.arrival_flight
+              "type": "rich_text",
+              "rich_text": [{ "type": "text", "text": { "content": reservation.arrival_flight} }]
             },
             "Cadeiras": {
               "type": "number",
@@ -201,8 +201,8 @@ app.post('/email', (req, res) => {
               "number": parseInt(reservation.customer.phone)
             },
             "Voo": {
-              "type": "url",
-              "url": "https://www.flightradar24.com/data/flights/"+reservation.departure_flight
+              "type": "rich_text",
+              "rich_text": [ { "type": "text", "text": { "content": reservation.departure_flight} } ]
             },
             "Cadeiras": {
               "type": "number",
