@@ -84,9 +84,13 @@ app.post('/email', (req, res) => {
               "type": "select",
               "select": { "name": vehicleTranslator[reservation.group] }
             },
-            "Data": {
+            "Data Lavagem": {
               "type": "date",
               "date": { "start": reservation.pickup_date.split(" ")[0] }
+            },
+            "Data": {
+              "type": "date",
+              "date": { "start": new Date(reservation.pickup_date).toISOString(), "time_zone": "Atlantic/Madeira" }
             },
             "Local": {
               "type": "select",
