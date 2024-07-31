@@ -12,8 +12,8 @@ const notion = new Client({ auth: process.env.NOTION_API_KEY });
 // GET ANYRENT INFORMATION
 const axios = require('axios');
 
-// Rota para receber webhooks de e-mail
-app.post('/email', (req, res) => {
+// Rota para criar uma nova reserva ( 3 operações )
+app.post('/add', (req, res) => {
   
   // Recebe o ID da nova reserva
   const idReserva = req.body.id;
