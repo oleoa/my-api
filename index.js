@@ -132,10 +132,6 @@ app.post('/add', async (req, res) => {
             "type": "date",
             "date": { "start": reservation.pickup_date.split(" ")[0] }
           },
-          "Data Entrega": {
-            "type": "date",
-            "date": { "start": new Date(reservation.pickup_date).toISOString(), "time_zone": "Atlantic/Madeira" }
-          },
           "Local": {
             "type": "select",
             "select": { "name": "Sede" }
