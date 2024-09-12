@@ -106,7 +106,10 @@ app.post('/add', async (req, res) => {
       });
 
     let locale = reservation.customer.country;
-    let name = toTitleCase(reservation.customer.name);      
+    let name = toTitleCase(reservation.customer.name);
+    
+    let prepareDate = new Date(reservation.pickup_date);
+    prepareDate.setHours(prepareDate.getHours()-1);
 
     (async () => {
 
@@ -130,7 +133,7 @@ app.post('/add', async (req, res) => {
           },
           "Data": {
             "type": "date",
-            "date": { "start": reservation.pickup_date.split(" ")[0] }
+            "date": { "start": prepareDate.toISOString(), "time_zone": "Atlantic/Madeira" }
           },
           "Local": {
             "type": "select",
