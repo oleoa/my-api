@@ -282,11 +282,58 @@ app.post('/add', async (req, res) => {
 
 });
 
-
 app.get('/vehicles', async (req, res) => {
 
   // Vai buscar pela kilometragem dos carros
   updateVehicles();
+
+  res.status(200).send('Veículos atualizados com sucesso!');
+
+});
+
+// Rota que verifica as reservas no anyrent a procura de uma não tratada
+app.get('/verification', async (req, res) => {
+
+  // Recebe a data de hoje em YYYYMMDD
+  const today = new Date();
+  const formattedPickupDate = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+
+  // Pede informações ao anyrent
+  await axios.get
+  (
+    'https://achieverac.api.anyrent.pt/v1/bookings/'+
+    '?api_key='+process.env.ANYRENT_API_KEY+'&'+
+    'pickup_date_from='+formattedPickupDate+'&'+
+    'sort=pickup_date'
+  )
+  .then(response => {
+
+    // Recebe todas as seguintes reservas
+    reservations = response.data.bookings;
+
+    // Agora verifico se alguma não tem o OK ou se alguma tem o Notion
+    const filteredReservations = reservations.filter(reservation =>
+      !reservation.external_reference.includes("OK") || reservation.external_reference.includes("Notion")
+    )
+
+    // Se for 0 = Não tem reservas a tratar, se for 1 = Tem reservas a tratar não para hoje, se for 2 = Tem reservas a tratar para hoje.
+    let status;
+    if(filteredReservations.length == 0) status = 0
+    else {
+
+      let firstPickUpDate = filteredReservations[0].pickup_date.split(" ")[0];
+      let todayPickUpDate = today.toISOString().split('T')[0];    
+
+      status = firstPickUpDate == todayPickUpDate? 2 : 1;
+
+    }
+
+  })
+  .catch(error => {
+
+    console.error('Error making GET request: ', error);
+
+  });
 
   res.status(200).send('Veículos atualizados com sucesso!');
 
