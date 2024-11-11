@@ -334,7 +334,7 @@ app.get('/verification', async (req, res) => {
     let firstPickUpDate = filteredReservations[0].pickup_date.split(" ")[0];
     let todayPickUpDate = today.toISOString().split('T')[0];    
 
-    status = firstPickUpDate == todayPickUpDate? 2 : 1;
+    status = (firstPickUpDate == todayPickUpDate) ? 2 : 1 ;
 
   }
 
