@@ -323,8 +323,8 @@ app.get('/verification', async (req, res) => {
   // Se for 0 = Não tem reservas a tratar, se for 1 = Tem reservas a tratar não para hoje, se for 2 = Tem reservas a tratar para hoje.
   let answer = [
     "Não tem reservas a tratar",
-    "Tem reservas a tratar não para hoje",
-    "Tem reservas a tratar para hoje"
+    "Tem reservas a tratar",
+    "TEM RESERVAS A TRATAR PARA HOJE"
   ];
 
   let status;
@@ -338,7 +338,12 @@ app.get('/verification', async (req, res) => {
 
   }
 
-  res.status(200).send(answer[status]);
+  let answerJson = {
+    status: status,
+    message: answer[status]
+  }
+
+  res.status(200).json(answerJson);
 
 });
 
